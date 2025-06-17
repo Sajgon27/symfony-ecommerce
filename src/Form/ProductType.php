@@ -25,7 +25,7 @@ class ProductType extends AbstractType
             ]),
             new Assert\Length([
                 'min' => 3,
-                'minMessage' => 'Nazwa musi mieć co najmniej {{ limit }} znaki.'
+                'minMessage' => 'Nazwa musi mieć co najmniej 3 znaki.'
             ])
         ]
     ])
@@ -36,7 +36,7 @@ class ProductType extends AbstractType
             ]),
             new Assert\Length([
                 'min' => 10,
-                'minMessage' => 'Opis musi mieć co najmniej {{ limit }} znaków.'
+                'minMessage' => 'Opis musi mieć co najmniej 10 znaków.'
             ])
         ]
     ])
