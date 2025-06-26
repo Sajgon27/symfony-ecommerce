@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,20 @@ class Product
 
     #[ORM\Column]
     private ?int $stock = null;
+
+    #[ORM\Column]
+    private ?bool $is_featured = false;
+
+    /**
+     * @var Collection<int, ProductCategory>
+     */
+    #[ORM\ManyToMany(targetEntity: ProductCategory::class, inversedBy: 'products')]
+    private Collection $category;
+
+    public function __construct()
+    {
+        $this->category = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +121,42 @@ class Product
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function isFeatured(): ?bool
+    {
+        return $this->is_featured;
+    }
+
+    public function setIsFeatured(bool $is_featured): static
+    {
+        $this->is_featured = $is_featured;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductCategory>
+     */
+    public function getCategory(): Collection
+    {
+        return $this->category;
+    }
+
+    public function addCategory(ProductCategory $category): static
+    {
+        if (!$this->category->contains($category)) {
+            $this->category->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(ProductCategory $category): static
+    {
+        $this->category->removeElement($category);
 
         return $this;
     }

@@ -6,39 +6,25 @@ use App\Entity\Product;
 use App\Form\ProductType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ProductService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private FormFactoryInterface $formFactory
+        private FormFactoryInterface $formFactory,
+        private SerializerInterface $serializer
     ) {}
-    public function handleStoringProduct(string $body)
+    public function handleStoringProduct(string $body, ?Product $product = null)
     {
         $data = json_decode($body, true);
-        $product = new Product();
-        $form = $this->formFactory->create(ProductType::class, $product);
-
-        $form->submit($data);
-
-
-        if (!$form->isValid()) {
-            $errors = [];
-            foreach ($form->getErrors(true) as $error) {
-                $errors[] = [
-                    'field' => $error->getOrigin()->getName(),
-                    'message' => $error->getMessage()
-                ];
-            }
-            return [null, $errors];
-        }
-
-
-
-        $product = $form->getData();
+        
+        $product = $this->serializer->deserialize($body, Product::class,'json');
         $this->entityManager->persist($product);
         $this->entityManager->flush();
+        return $product;
+        //dd($product);
 
-        return [$product, []];
+        
     }
 }

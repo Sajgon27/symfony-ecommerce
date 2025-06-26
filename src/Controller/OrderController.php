@@ -24,6 +24,7 @@ final class OrderController extends AbstractController
     #[Route('/orders', name:'orders_store', methods:["POST"])]
     public function store(Request $request, OrderService $service):JsonResponse
      {
+       
         $order = $service->handleStoringOrder($request->getContent());
         return JsonResponse::fromJsonString($order);
     }

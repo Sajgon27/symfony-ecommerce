@@ -45,12 +45,12 @@ final class ProductController extends AbstractController
     #[Route('/product', name: "product_store", methods: ["POST"])]
     public function store(Request $request, ProductService $productService): JsonResponse
     {
-        [$product, $errors] = $productService->handleStoringProduct($request->getContent());
-        if (!empty($errors)) {
-            return $this->json([
-                "errors" => $errors
-            ], 400);
-        }
+        $product = $productService->handleStoringProduct($request->getContent());
+       // if (!empty($errors)) {
+        //    return $this->json([
+       ////         "errors" => $errors
+      //      ], 400);
+      //  }
 
         return $this->json([
             'data' => [
@@ -61,5 +61,24 @@ final class ProductController extends AbstractController
             ],
             "message" => "Product created"
         ], 200);
+    }
+
+    #[Route('/product/{id}', name:"product_update", methods:['PATCH'])]
+    public function update(Request $request, Product $product, ProductService $productService):JsonResponse
+    {
+       [$product, $errors] = $productService->handleStoringProduct($request->getContent(), $product);
+
+        return $this->json([
+            'message'=> 'eoo'
+        ]);
+    }
+
+    #[Route('/products/featured', name:'products_featured', methods:['GET'])]
+    public function getFeatured(ProductRepository $repository):JsonResponse
+    {
+        $products = $repository->findFeatured();
+        return $this->json([
+            "products"=> $products
+        ]);
     }
 }

@@ -159,4 +159,11 @@ class Order
 
         return $this;
     }
+
+    public function setPaymentMethod(?string $payment_method): static
+    {
+        $this->payment_method = $payment_method;
+
+        return $this;
+    }
 }

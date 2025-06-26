@@ -16,16 +16,15 @@ class OrderService {
     public function handleStoringOrder(string $data) 
     {
         $raw_data = $this->serializer->serialize($data, 'json');
-       // dd($raw_data);
+     
         $order = $this->serializer->deserialize($data,Order::class,'json');
-       // dd(gettype($data->getOrderItems()));
+      
        $i = 0;
         foreach($order->getOrderItems() as $order) {
             $i++;
             $order_item = $this->serializer->deserialize($order, OrderItem::class, "json");
             $order->addOrderItem($order_item);
         }
-        //dd($i);
        $this->em->persist($order);
        $this->em->flush();
         return $order->getOrderNumber();

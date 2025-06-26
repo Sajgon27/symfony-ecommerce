@@ -35,7 +35,7 @@ final class ProductCategoryController extends AbstractController
     #[Route('/category', name: 'product_category_store', methods: ['POST'])]
     public function store(Request $request, ProductCategoryService $service): JsonResponse
     {
-
+ //dd($request->getContent());
         [$category, $errors] = $service->handleStoringCategory($request->getContent());
         if (!empty($errors)) {
             return $this->json([

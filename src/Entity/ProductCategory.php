@@ -30,19 +30,32 @@ class ProductCategory
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $meta_description = null;
 
-    #[Groups(["category:read"])]
+
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childCategories')]
+    
     private ?self $parentCategory = null;
 
     /**
      * @var Collection<int, self>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCategory')]
+        #[Groups(["category:read"])]
     private Collection $childCategories;
+
+    #[ORM\Column]
+    #[Groups(["category:read"])]
+    private ?bool $is_child = false;
+
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'category')]
+    private Collection $products;
 
     public function __construct()
     {
         $this->childCategories = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,5 +133,44 @@ class ProductCategory
                 $child->setParentCategory(null);
             }
         }
+    }
+
+    public function isChild(): ?bool
+    {
+        return $this->is_child;
+    }
+
+    public function setIsChild(bool $is_child): static
+    {
+        $this->is_child = $is_child;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeCategory($this);
+        }
+
+        return $this;
     }
 }

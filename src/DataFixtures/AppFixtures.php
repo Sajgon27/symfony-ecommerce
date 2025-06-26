@@ -12,12 +12,13 @@ class AppFixtures extends Fixture
     {
             for ($i = 0; $i < 30; $i++) {
             $product = new Product();
-            $product->setName('product '.$i);
+            $product->setName('Papier toal '.$i);
             $product->setPrice(mt_rand(10, 100));
             $product->setEan(2301203);
             $product->setDescription('eoeo eoe oeo');
             $product->setStock(2);
             $product->setMainImage('/test-image');
+            $product->setIsFeatured(false);
             $manager->persist($product);
         }
 

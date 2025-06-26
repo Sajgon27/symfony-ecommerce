@@ -15,7 +15,37 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
+  public function findFeatured(): array
+{
+    $em = $this->getEntityManager();
 
+    $featured = $em->createQueryBuilder()
+        ->select('p')
+        ->from(Product::class, 'p')
+        ->where('p.is_featured = true')
+        ->setMaxResults(10)
+        ->getQuery()
+        ->getResult();
+
+    $featuredCount = count($featured);
+
+    if ($featuredCount < 10) {
+        $missing = 10 - $featuredCount;
+
+        $random = $em->createQueryBuilder()
+            ->select('p')
+            ->from(Product::class, 'p')
+            ->where('p.is_featured = false')
+            ->orderBy('RAND()') 
+            ->setMaxResults($missing)
+            ->getQuery()
+            ->getResult();
+
+        $featured = array_merge($featured, $random);
+    }
+
+    return $featured;
+}
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

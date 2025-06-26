@@ -28,8 +28,12 @@ class ProductCategoryService{
             };
             return [null, $errors ];
         }
- 
+        
         $category = $form->getData($data);
+        if($category->getParentCategory()) {
+            $category->setIsChild(true);
+        }
+        
         $this->entityManager->persist($category);
         $this->entityManager->flush();
         return [$category, null];
