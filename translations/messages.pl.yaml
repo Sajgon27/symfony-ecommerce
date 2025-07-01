@@ -1,0 +1,2 @@
+element:
+  count: "{0} Brak elementów|{1} %count% element|[2,4] %count% elementy|[5,Inf] %count% elementów"

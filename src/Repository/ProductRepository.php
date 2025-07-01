@@ -46,6 +46,7 @@ class ProductRepository extends ServiceEntityRepository
 
     return $featured;
 }
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

@@ -11,15 +11,41 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ProductController extends AbstractController
 {
     #[Route('/product', name: 'app_product', methods: ["GET"])]
-    public function index(ProductRepository $repository, SerializerInterface $serializer): JsonResponse
-    {
-        $products = $serializer->serialize($repository->findAll(), 'json');
-        return JsonResponse::fromJsonString($products);
-    }
+   public function index(
+    Request $request,
+    ProductRepository $repository,
+    SerializerInterface $serializer,
+    TranslatorInterface $translator
+): JsonResponse {
+    $page = max(1, (int) $request->query->get('page', 1));
+    $limit = 30;
+    $offset = ($page - 1) * $limit;
+
+    $products = $repository->findBy([], null, $limit, $offset);
+    $total = count($repository->findAll()); 
+
+   $label = $translator->trans('element.count', [
+            '%count%' => $total
+        ]);
+
+    $data = [
+        'page' => $page,
+        'limit' => $limit,
+        'label' => $label,
+        'total' => $total,
+        'products' => json_decode($serializer->serialize($products, 'json'), true),
+    ];
+
+    return new JsonResponse($data);
+}
+
+
+    
 
     #[Route('/product/{id}', name: "show_product", methods: ["GET"])]
     public function show(Product $product, SerializerInterface $serializer): JsonResponse
@@ -79,6 +105,20 @@ final class ProductController extends AbstractController
         $products = $repository->findFeatured();
         return $this->json([
             "products"=> $products
+        ]);
+    }
+
+    #[Route('/products/selected', name:'products_selected', methods:['GET','OPTIONS '])]
+    public function getSelected(Request $request, EntityManagerInterface $entityManager):JsonResponse
+    {
+        $productIds = $request->query->all();
+       // dd($request->query->all());
+       // $productIds = json_decode($request->getContent());
+        $products = $entityManager->getRepository(Product::class)
+        ->findBy(['id'=>$productIds]);
+
+        return $this->json([
+            'products'=> $products
         ]);
     }
 }

@@ -37,6 +37,9 @@ class Product
     #[ORM\Column]
     private ?bool $is_featured = false;
 
+    #[ORM\Column]
+    private ?string $slug = null;
+
     /**
      * @var Collection<int, ProductCategory>
      */
@@ -157,6 +160,18 @@ class Product
     public function removeCategory(ProductCategory $category): static
     {
         $this->category->removeElement($category);
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
