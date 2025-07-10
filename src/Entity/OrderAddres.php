@@ -14,50 +14,41 @@ class OrderAddres
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Order $order_id = null;
+  
 
     #[ORM\Column(enumType: AddressesType::class)]
     private ?AddressesType $type = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $first_name = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $last_name = null;
+    private ?string $surname = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $address_line_1 = null;
+    private ?string $addressLine1 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $address_line_2 = null;
+    private ?string $addressLine2 = null;
 
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
     #[ORM\Column(length: 10)]
-    private ?string $postal_code = null;
+    private ?string $postalCode = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $phone = null;
+    
+    #[ORM\Column(length: 150)]
+    private ?string $company = null;
+
+    
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getOrderId(): ?Order
-    {
-        return $this->order_id;
-    }
-
-    public function setOrderId(?Order $order_id): static
-    {
-        $this->order_id = $order_id;
-
-        return $this;
-    }
+    
 
     public function getType(): ?AddressesType
     {
@@ -71,50 +62,50 @@ class OrderAddres
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getName(): ?string
     {
-        return $this->first_name;
+        return $this->name;
     }
 
-    public function setFirstName(string $first_name): static
+    public function setName(string $name): static
     {
-        $this->first_name = $first_name;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getSurname(): ?string
     {
-        return $this->last_name;
+        return $this->surname;
     }
 
-    public function setLastName(string $last_name): static
+    public function setSurname(string $surname): static
     {
-        $this->last_name = $last_name;
+        $this->surname = $surname;
 
         return $this;
     }
 
     public function getAddressLine1(): ?string
     {
-        return $this->address_line_1;
+        return $this->addressLine1;
     }
 
-    public function setAddressLine1(string $address_line_1): static
+    public function setAddressLine1(string $addressLine1): static
     {
-        $this->address_line_1 = $address_line_1;
+        $this->addressLine1 = $addressLine1;
 
         return $this;
     }
 
     public function getAddressLine2(): ?string
     {
-        return $this->address_line_2;
+        return $this->addressLine2;
     }
 
-    public function setAddressLine2(?string $address_line_2): static
+    public function setAddressLine2(?string $addressLine2): static
     {
-        $this->address_line_2 = $address_line_2;
+        $this->addressLine2 = $addressLine2;
 
         return $this;
     }
@@ -133,25 +124,27 @@ class OrderAddres
 
     public function getPostalCode(): ?string
     {
-        return $this->postal_code;
+        return $this->postalCode;
     }
 
-    public function setPostalCode(string $postal_code): static
+    public function setPostalCode(string $postalCode): static
     {
-        $this->postal_code = $postal_code;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getCompany(): ?string
     {
-        return $this->phone;
+        return $this->company;
     }
 
-    public function setPhone(string $phone): static
+    public function setCompany(string $company): static
     {
-        $this->phone = $phone;
+        $this->company = $company;
 
         return $this;
     }
+
+ 
 }

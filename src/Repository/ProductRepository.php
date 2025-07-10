@@ -22,7 +22,7 @@ class ProductRepository extends ServiceEntityRepository
     $featured = $em->createQueryBuilder()
         ->select('p')
         ->from(Product::class, 'p')
-        ->where('p.is_featured = true')
+        ->where('p.isFeatured = true')
         ->setMaxResults(10)
         ->getQuery()
         ->getResult();
@@ -35,7 +35,7 @@ class ProductRepository extends ServiceEntityRepository
         $random = $em->createQueryBuilder()
             ->select('p')
             ->from(Product::class, 'p')
-            ->where('p.is_featured = false')
+            ->where('p.isFeatured = false')
             ->orderBy('RAND()') 
             ->setMaxResults($missing)
             ->getQuery()

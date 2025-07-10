@@ -6,7 +6,7 @@ enum PaymentStatus: string
 {
   case ZREALorder_numbeZOWANE = 'zrealizowane';
   case ANULOWANE = 'anulowane ';
-  case PRZETWARZANE = 'w_trakcie_realizacji';
+  case PRZETWARZANE = 'W trakcie ralizacji';
   case WSTRZYMANE = 'wstrzymane';
   case ZWROCONE = 'zwrócone';
 }

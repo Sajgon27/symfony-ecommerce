@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -14,41 +15,63 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["products:index","products:show"])]
     private ?int $id = null;
 
+    #[Groups(["products:index","products:show"])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["products:show"])]
+    #[ORM\Column(type: Types::TEXT, nullable:true)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+     #[Groups(["products:index","products:show"])]
     private ?string $ean = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $main_image = null;
+    #[Groups(["products:index","products:show"])]
+    private ?string $mainImage = null;
 
     #[ORM\Column]
+       #[Groups(["products:index","products:show"])]
     private ?int $price = null;
 
     #[ORM\Column]
+       #[Groups(["products:index","products:show"])]
+    private ?int $promoPrice = null;
+
+    #[ORM\Column]
+       #[Groups(["products:index","products:show"])]
     private ?int $stock = null;
 
     #[ORM\Column]
-    private ?bool $is_featured = false;
+       #[Groups(["products:index","products:show"])]
+    private ?bool $isFeatured = false;
 
-    #[ORM\Column]
+    #[ORM\Column(unique:true)]
+       #[Groups(["products:index","products:show"])]
     private ?string $slug = null;
 
     /**
      * @var Collection<int, ProductCategory>
      */
     #[ORM\ManyToMany(targetEntity: ProductCategory::class, inversedBy: 'products')]
+      #[Groups(["products:show"])]
     private Collection $category;
+
+    /**
+     * @var Collection<int, ProductImage>
+     */
+    #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', orphanRemoval: true, cascade:['persist'])]
+      #[Groups(["products:show"])]
+    private Collection $productImages;
 
     public function __construct()
     {
         $this->category = new ArrayCollection();
+        $this->productImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,12 +117,12 @@ class Product
 
     public function getMainImage(): ?string
     {
-        return $this->main_image;
+        return $this->mainImage;
     }
 
-    public function setMainImage(string $main_image): static
+    public function setMainImage(string $mainImage): static
     {
-        $this->main_image = $main_image;
+        $this->mainImage = $mainImage;
 
         return $this;
     }
@@ -130,12 +153,12 @@ class Product
 
     public function isFeatured(): ?bool
     {
-        return $this->is_featured;
+        return $this->isFeatured;
     }
 
-    public function setIsFeatured(bool $is_featured): static
+    public function setIsFeatured(bool $isFeatured): static
     {
-        $this->is_featured = $is_featured;
+        $this->isFeatured = $isFeatured;
 
         return $this;
     }
@@ -172,6 +195,48 @@ class Product
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPromoPrice(): ?int
+    {
+        return $this->promoPrice;
+    }
+
+    public function setPromoPrice(int $promoPrice): static
+    {
+        $this->promoPrice = $promoPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductImage>
+     */
+    public function getProductImages(): Collection
+    {
+        return $this->productImages;
+    }
+
+    public function addProductImage(ProductImage $productImage): static
+    {
+        if (!$this->productImages->contains($productImage)) {
+            $this->productImages->add($productImage);
+            $productImage->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductImage(ProductImage $productImage): static
+    {
+        if ($this->productImages->removeElement($productImage)) {
+            // set the owning side to null (unless already changed)
+            if ($productImage->getProduct() === $this) {
+                $productImage->setProduct(null);
+            }
+        }
 
         return $this;
     }

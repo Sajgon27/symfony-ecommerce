@@ -16,13 +16,16 @@
         "doctrine/orm": "^3.3.3",
         "lexik/jwt-authentication-bundle": "^3.1",
         "nelmio/cors-bundle": "^2.5",
+        "openpayu/openpayu": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.1",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
+        "symfony/filesystem": "7.3.*",
         "symfony/flex": "^2.7.1",
         "symfony/form": "7.3.*",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/mime": "7.3.*",
         "symfony/password-hasher": "7.3.*",
         "symfony/property-access": "7.3.*",
         "symfony/property-info": "7.3.*",
@@ -86,6 +89,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.1",
-        "symfony/maker-bundle": "^1.63"
+        "symfony/debug-bundle": "7.3.*",
+        "symfony/maker-bundle": "^1.63",
+        "symfony/var-dumper": "7.3.*"
     }
 }
